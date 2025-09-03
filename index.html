@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Field Research Survey Tool</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#2563eb">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Add Babel to transpile JSX in the browser -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -22,7 +24,20 @@
     <div id="root"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf-autotable.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Change script type to text/babel for Babel to transpile it -->
-    <script type="text/babel" data-type="module" src="./index.tsx"></script>
+    <script type="text/babel" data-type="module" src="./src/index.tsx"></script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }).catch(error => {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+        });
+      }
+    </script>
   </body>
 </html>
