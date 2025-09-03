@@ -53,7 +53,7 @@
 
                 <section>
                     <h2 class="text-2xl font-bold text-gray-700 mb-4">Actions</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <a href="#/survey" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center text-center">
                             <div class="bg-purple-100 text-purple-600 p-4 rounded-full mb-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -67,6 +67,13 @@
                             </div>
                             <h3 class="text-lg font-bold text-gray-800">View & Export Responses</h3>
                             <p class="text-sm text-gray-500 mt-1">Review collected data and export for analysis.</p>
+                        </a>
+                         <a href="#/analytics" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center text-center">
+                            <div class="bg-purple-100 text-purple-600 p-4 rounded-full mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800">View Analytics</h3>
+                            <p class="text-sm text-gray-500 mt-1">Visualize aggregated survey data.</p>
                         </a>
                     </div>
                 </section>
@@ -138,6 +145,54 @@
         <div id="page-response-detail" class="page min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8">
              <!-- Detail content will be injected by JS -->
         </div>
+
+        <!-- AnalyticsPage -->
+        <div id="page-analytics" class="page min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8">
+            <div class="max-w-7xl mx-auto">
+                 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+                    <div>
+                        <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">Survey Analytics</h1>
+                        <p class="text-lg text-gray-600 mt-2">Aggregated insights from all responses.</p>
+                    </div>
+                     <a href="#/" class="px-5 py-3 bg-white border border-gray-300 text-gray-700 font-bold rounded-lg text-base hover:bg-gray-100 transition-colors mt-4 sm:mt-0">
+                        Back to Home
+                    </a>
+                </header>
+                
+                <main id="analytics-container" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Gender Distribution</h3>
+                        <canvas id="gender-chart"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Education Level</h3>
+                        <canvas id="education-chart"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Distance to Vaccination Center</h3>
+                        <canvas id="distance-chart"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Belief in Vaccine Safety</h3>
+                        <canvas id="safety-chart"></canvas>
+                    </div>
+                     <div class="bg-white p-6 rounded-xl shadow-lg lg:col-span-2">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Main Source of Vaccine Information</h3>
+                        <canvas id="source-chart"></canvas>
+                    </div>
+                </main>
+
+                <div id="analytics-empty-state" class="text-center py-16 bg-white rounded-lg shadow-sm" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                    <h3 class="mt-4 text-xl font-semibold text-gray-800">Not enough data to display analytics</h3>
+                    <p class="mt-1 text-gray-500">Collect at least one survey response to see visualizations.</p>
+                    <a href="#/survey" class="mt-6 inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:opacity-90 transition-opacity">
+                        Start New Survey
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </main>
     
     <!-- Delete Confirmation Modal -->
@@ -156,6 +211,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf-autotable.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

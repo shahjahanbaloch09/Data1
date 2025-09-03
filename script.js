@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- STATE MANAGEMENT ---
     let responses = [];
     let surveyState = {};
+    let charts = {};
 
     const loadResponses = () => {
         try {
@@ -110,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         survey: document.getElementById('page-survey'),
         responses: document.getElementById('page-responses'),
         responseDetail: document.getElementById('page-response-detail'),
+        analytics: document.getElementById('page-analytics'),
     };
     const deleteModal = document.getElementById('delete-confirm-modal');
     
@@ -238,6 +240,88 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('export-txt-btn').addEventListener('click', () => exportToTextSummary(response));
         document.getElementById('export-json-btn').addEventListener('click', () => exportToJson(response));
     };
+
+    // --- ANALYTICS LOGIC ---
+    const renderAnalyticsPage = () => {
+        const container = document.getElementById('analytics-container');
+        const emptyState = document.getElementById('analytics-empty-state');
+        
+        if (responses.length === 0) {
+            container.style.display = 'none';
+            emptyState.style.display = 'block';
+            return;
+        }
+        
+        container.style.display = 'grid';
+        emptyState.style.display = 'none';
+
+        const chartConfigs = [
+            { questionId: 'gender', canvasId: 'gender-chart', type: 'pie' },
+            { questionId: 'education_level', canvasId: 'education-chart', type: 'bar' },
+            { questionId: 'distance_to_center', canvasId: 'distance-chart', type: 'bar' },
+            { questionId: 'vaccine_safety_belief', canvasId: 'safety-chart', type: 'pie' },
+            { questionId: 'vaccine_info_source', canvasId: 'source-chart', type: 'bar', options: { indexAxis: 'y' } },
+        ];
+
+        chartConfigs.forEach(config => {
+            const aggregated = aggregateDataForQuestion(config.questionId);
+            renderChart(config.canvasId, config.type, aggregated.labels, aggregated.data, config.options);
+        });
+    };
+    
+    const aggregateDataForQuestion = (questionId) => {
+        const counts = {};
+        for (const response of responses) {
+            const answer = response.answers[questionId];
+            if (answer) {
+                counts[answer] = (counts[answer] || 0) + 1;
+            }
+        }
+        return {
+            labels: Object.keys(counts),
+            data: Object.values(counts)
+        };
+    };
+
+    const renderChart = (canvasId, type, labels, data, extraOptions = {}) => {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        if (charts[canvasId]) {
+            charts[canvasId].destroy();
+        }
+        
+        const chartColors = [
+            '#3b82f6', '#8b5cf6', '#10b981', '#f97316', '#ef4444', 
+            '#14b8a6', '#6366f1', '#ec4899', '#f59e0b', '#34d399'
+        ];
+
+        charts[canvasId] = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Count',
+                    data: data,
+                    backgroundColor: chartColors,
+                    borderColor: '#ffffff',
+                    borderWidth: type === 'pie' ? 2 : 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: type === 'pie' ? 'top' : 'none',
+                    },
+                },
+                scales: (type === 'bar') ? {
+                    y: { beginAtZero: true },
+                } : {},
+                ...extraOptions,
+            }
+        });
+    };
+
 
     // --- SURVEY LOGIC ---
 
@@ -526,6 +610,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (url === 'responses') {
             pages.responses.classList.add('active');
             renderResponsesPage();
+        } else if (url === 'analytics') {
+            pages.analytics.classList.add('active');
+            renderAnalyticsPage();
         } else {
             pages.home.classList.add('active');
             renderHomePage();
