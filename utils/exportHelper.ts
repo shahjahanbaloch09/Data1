@@ -2,6 +2,7 @@ import type { SurveyResponse, Section } from '../types';
 import { SURVEY_STRUCTURE } from '../constants';
 
 declare const jspdf: any;
+declare const XLSX: any;
 
 const triggerDownload = (blob: Blob, filename: string) => {
   const url = URL.createObjectURL(blob);
@@ -135,4 +136,31 @@ export const exportToPdf = (response: SurveyResponse) => {
   });
 
   doc.save(`survey-response-${response.participantId}.pdf`);
+};
+
+export const exportToExcel = (responses: SurveyResponse[]) => {
+  const dataForSheet = responses.map(response => {
+    const flatResponse: { [key: string]: any } = {
+      'Participant ID': response.participantId,
+      'Timestamp': new Date(response.timestamp).toLocaleString(),
+      'Language': response.notes.language,
+      'Tehsil': response.notes.tehsil,
+      'Observations': response.notes.observations,
+    };
+    SURVEY_STRUCTURE.forEach(section => {
+      section.questions.forEach(q => {
+        const header = q.text; // Using question text as header
+        flatResponse[header] = response.answers[q.id] ?? '';
+      });
+    });
+    return flatResponse;
+  });
+
+  const ws = XLSX.utils.json_to_sheet(dataForSheet);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Survey Responses');
+  
+  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const data = new Blob([excelBuffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'});
+  triggerDownload(data, 'survey-responses-all.xlsx');
 };
