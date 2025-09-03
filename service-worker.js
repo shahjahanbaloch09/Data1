@@ -1,24 +1,11 @@
 const CACHE_NAME = 'field-survey-tool-cache-v1';
 const urlsToCache = [
   '/',
-  '/index.html',
-  // Note: The bundler/framework usually generates a list of assets to cache.
-  // We are manually listing the core files and CDN links.
-  // This might need adjustment if file names or paths change.
-  // Local files
-  '/src/index.tsx',
-  '/src/App.tsx',
-  '/src/types.ts',
-  '/src/constants.tsx',
-  '/src/components/HomePage.tsx',
-  '/src/components/SurveyPage.tsx',
-  '/src/components/ResponsesPage.tsx',
-  '/src/components/ResponseDetailPage.tsx',
-  '/src/hooks/useLocalStorage.ts',
-  '/src/utils/exportHelper.ts',
+  'index.html',
+  'style.css',
+  'script.js',
   // CDN assets
   'https://cdn.tailwindcss.com',
-  'https://unpkg.com/@babel/standalone/babel.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf-autotable.umd.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
