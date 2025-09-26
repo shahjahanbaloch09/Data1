@@ -658,6 +658,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.getElementById('load-sample-data-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('This will replace all existing survey data with 100 sample responses. This action cannot be undone. Are you sure you want to continue?')) {
+            if (window.syntheticData) {
+                responses = window.syntheticData;
+                saveResponses();
+                alert('100 sample responses have been loaded successfully.');
+                renderHomePage(); 
+                window.location.hash = '#/responses';
+                // If the hash doesn't change, the router won't fire, so manually call it.
+                if(window.location.hash === '#/responses') {
+                    router();
+                }
+            } else {
+                alert('Failed to load sample data. The data file might be missing.');
+            }
+        }
+    });
+
 
     // --- APP START ---
     loadResponses();
